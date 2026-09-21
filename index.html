@@ -1,0 +1,118 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#071b19" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>破晓台球 · 8 Ball</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <header class="topbar">
+      <div class="brand" aria-label="破晓台球">
+        <span class="brand-mark">8</span>
+        <div>
+          <strong>破晓台球</strong>
+          <small>DAWN BILLIARDS</small>
+        </div>
+      </div>
+
+      <div class="scoreboard" aria-label="比分">
+        <section class="player-card player-one is-active" id="playerOneCard">
+          <span class="avatar">你</span>
+          <div><small>玩家</small><strong id="playerOneBalls">待定</strong></div>
+          <b id="playerOneScore">0</b>
+        </section>
+        <span class="score-divider">VS</span>
+        <section class="player-card player-two" id="playerTwoCard">
+          <b id="playerTwoScore">0</b>
+          <div><small>电脑</small><strong id="playerTwoBalls">待定</strong></div>
+          <span class="avatar">AI</span>
+        </section>
+      </div>
+
+      <button class="icon-button" id="soundButton" type="button" aria-label="切换音效">♪</button>
+    </header>
+
+    <main class="game-layout">
+      <section class="table-stage" id="tableStage">
+        <canvas id="gameCanvas" aria-label="台球桌"></canvas>
+        <div class="turn-pill" id="turnPill"><i></i><span>你的回合</span></div>
+        <div class="foul-toast" id="foulToast">犯规 · 对方自由球</div>
+        <div class="aim-tip" id="aimTip">拖动球桌瞄准，点击击球</div>
+      </section>
+
+      <aside class="control-deck">
+        <div class="control-heading">
+          <div>
+            <small>击球控制</small>
+            <strong id="controlTitle">安排你的下一杆</strong>
+          </div>
+          <button class="text-button" id="resetButton" type="button">重新开局</button>
+        </div>
+
+        <div class="power-row">
+          <div class="power-label"><span>力度</span><strong id="powerValue">52%</strong></div>
+          <div class="power-slider-wrap">
+            <div class="power-glow" id="powerGlow"></div>
+            <input id="powerSlider" type="range" min="12" max="100" value="52" aria-label="击球力度" />
+          </div>
+          <div class="power-hint"><span>轻推</span><span>全力</span></div>
+        </div>
+
+        <div class="action-row">
+          <button class="shot-button" id="shootButton" type="button">
+            <span class="shot-icon"></span>
+            <strong>击球</strong>
+            <small>SHOOT</small>
+          </button>
+          <div class="status-panel">
+            <div class="status-line"><span>当前目标</span><strong id="targetText">任意花色</strong></div>
+            <div class="status-line"><span>本杆状态</span><strong id="stateText">等待瞄准</strong></div>
+            <div class="progress-track"><i id="progressBar"></i></div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <div class="welcome-overlay overlay is-visible" id="welcomeOverlay">
+      <div class="welcome-card">
+        <div class="hero-balls" aria-hidden="true">
+          <i class="mini-ball mini-one">1</i>
+          <i class="mini-ball mini-eight">8</i>
+          <i class="mini-ball mini-eleven">11</i>
+        </div>
+        <p class="eyebrow">移动端 8 球挑战</p>
+        <h1>一杆定胜负</h1>
+        <p>拖动桌面瞄准方向，调整力度后击球。先清空自己的花色，再打进黑 8 即可获胜。</p>
+        <div class="feature-row">
+          <span><i>↗</i>拖拽瞄准</span>
+          <span><i>◎</i>自动物理</span>
+          <span><i>★</i>智能对手</span>
+        </div>
+        <button class="primary-button" id="startButton" type="button">开始比赛</button>
+        <small class="rotate-note">横屏体验更佳，竖屏也能畅玩</small>
+      </div>
+    </div>
+
+    <div class="result-overlay overlay" id="resultOverlay">
+      <div class="result-card">
+        <span class="result-icon" id="resultIcon">🏆</span>
+        <p class="eyebrow" id="resultEyebrow">漂亮的一杆</p>
+        <h2 id="resultTitle">你赢了</h2>
+        <p id="resultMessage">黑 8 落袋，比赛结束。</p>
+        <div class="result-score"><b id="finalPlayerScore">0</b><span>:</span><b id="finalAiScore">0</b></div>
+        <button class="primary-button" id="playAgainButton" type="button">再来一局</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
