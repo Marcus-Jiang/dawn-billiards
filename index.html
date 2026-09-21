@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
@@ -6,8 +6,12 @@
   <meta name="theme-color" content="#071b19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>破晓台球 · 8 Ball</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="可在手机离线游玩的 8 球、9 球与斯诺克台球游戏。" />
+  <title>破晓台球 · 8球 / 9球 / 斯诺克</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="./icons/favicon-32.png" />
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <div id="app">
@@ -16,7 +20,7 @@
 
     <header class="topbar">
       <div class="brand" aria-label="破晓台球">
-        <span class="brand-mark">8</span>
+        <span class="brand-mark" id="modeMark">8</span>
         <div>
           <strong>破晓台球</strong>
           <small>DAWN BILLIARDS</small>
@@ -37,7 +41,10 @@
         </section>
       </div>
 
-      <button class="icon-button" id="soundButton" type="button" aria-label="切换音效">♪</button>
+      <div class="top-actions">
+        <button class="icon-button install-button" id="installButton" type="button" aria-label="安装离线应用" hidden>↓</button>
+        <button class="icon-button" id="soundButton" type="button" aria-label="切换音效">♪</button>
+      </div>
     </header>
 
     <main class="game-layout">
@@ -51,10 +58,13 @@
       <aside class="control-deck">
         <div class="control-heading">
           <div>
-            <small>击球控制</small>
+            <small><span id="modeBadge">8 球</span> · 击球控制</small>
             <strong id="controlTitle">安排你的下一杆</strong>
           </div>
-          <button class="text-button" id="resetButton" type="button">重新开局</button>
+          <div class="control-actions">
+            <button class="text-button" id="modeButton" type="button">换模式</button>
+            <button class="text-button" id="resetButton" type="button">重开本局</button>
+          </div>
         </div>
 
         <div class="power-row">
@@ -73,7 +83,7 @@
             <small>SHOOT</small>
           </button>
           <div class="status-panel">
-            <div class="status-line"><span>当前目标</span><strong id="targetText">任意花色</strong></div>
+            <div class="status-line"><span>当前目标</span><strong id="targetText">红球</strong></div>
             <div class="status-line"><span>本杆状态</span><strong id="stateText">等待瞄准</strong></div>
             <div class="progress-track"><i id="progressBar"></i></div>
           </div>
@@ -88,16 +98,30 @@
           <i class="mini-ball mini-eight">8</i>
           <i class="mini-ball mini-eleven">11</i>
         </div>
-        <p class="eyebrow">移动端 8 球挑战</p>
-        <h1>一杆定胜负</h1>
-        <p>拖动桌面瞄准方向，调整力度后击球。先清空自己的花色，再打进黑 8 即可获胜。</p>
+        <p class="eyebrow" id="welcomeEyebrow">离线可玩的台球合集</p>
+        <h1 id="welcomeTitle">选择你的球局</h1>
+        <p id="welcomeDescription">8 球对决、极速 9 球，或完整计分的斯诺克。选一个模式，随时开局。</p>
+
+        <div class="mode-picker" id="modePicker" role="radiogroup" aria-label="选择游戏模式">
+          <button class="mode-option is-selected" data-mode="eight" type="button" role="radio" aria-checked="true">
+            <i>8</i><strong>8 球</strong><small>分组对抗</small>
+          </button>
+          <button class="mode-option" data-mode="nine" type="button" role="radio" aria-checked="false">
+            <i>9</i><strong>9 球</strong><small>最小号优先</small>
+          </button>
+          <button class="mode-option" data-mode="snooker" type="button" role="radio" aria-checked="false">
+            <i>S</i><strong>斯诺克</strong><small>计分挑战</small>
+          </button>
+        </div>
+
         <div class="feature-row">
           <span><i>↗</i>拖拽瞄准</span>
-          <span><i>◎</i>自动物理</span>
+          <span><i>◉</i>离线可玩</span>
           <span><i>★</i>智能对手</span>
         </div>
+        <div class="offline-status" id="offlineStatus"><i></i><span>正在准备离线资源</span></div>
         <button class="primary-button" id="startButton" type="button">开始比赛</button>
-        <small class="rotate-note">横屏体验更佳，竖屏也能畅玩</small>
+        <small class="rotate-note">横屏体验更佳 · 安装到主屏幕后无需网络</small>
       </div>
     </div>
 
@@ -106,13 +130,16 @@
         <span class="result-icon" id="resultIcon">🏆</span>
         <p class="eyebrow" id="resultEyebrow">漂亮的一杆</p>
         <h2 id="resultTitle">你赢了</h2>
-        <p id="resultMessage">黑 8 落袋，比赛结束。</p>
+        <p id="resultMessage">比赛结束。</p>
         <div class="result-score"><b id="finalPlayerScore">0</b><span>:</span><b id="finalAiScore">0</b></div>
-        <button class="primary-button" id="playAgainButton" type="button">再来一局</button>
+        <div class="result-actions">
+          <button class="primary-button" id="playAgainButton" type="button">再来一局</button>
+          <button class="secondary-button" id="resultModeButton" type="button">选择模式</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <script src="game.js"></script>
+  <script src="./game.js"></script>
 </body>
 </html>
