@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dawn-billiards-v4';
+const CACHE_NAME = 'dawn-billiards-v5';
 const CORE_ASSETS = [
   './',
   './index.html',
